@@ -52,6 +52,15 @@ import aiRouter from './routes/ai.routes.js'
 app.use("/api/auth", userRouter)
 app.use("/api/generate", aiRouter)
 
+// Root Health Check Route
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "TechArch API is live and running perfectly!",
+        environment: process.env.NODE_ENV || "development"
+    });
+});
+
 // Error handler
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
