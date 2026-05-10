@@ -16,6 +16,7 @@ const globalLimiter = rateLimit({
     max: 500, // Limit each IP to 500 requests per `window` (here, per 15 minutes)
     standardHeaders: true, 
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false },
     message: "Too many requests from this IP, please try again after 15 minutes"
 });
 app.use(globalLimiter);

@@ -11,6 +11,7 @@ const aiLimiter = rateLimit({
     max: 20, // Strict limit: 20 project generations/refinements per hour per IP
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false },
     message: { success: false, message: "AI Architecture Generation limit exceeded. Please wait 1 hour." }
 });
 
