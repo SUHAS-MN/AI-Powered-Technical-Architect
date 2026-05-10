@@ -22,14 +22,16 @@ app.use(globalLimiter);
 
 // Dynamic CORS for deployment
 const allowedOrigins = process.env.CORS_ORIGIN 
-    ? process.env.CORS_ORIGIN.split(',') 
+    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim().replace(/\/$/, ''))
     : ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"];
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        const cleanOrigin = origin ? origin.replace(/\/$/, '') : origin;
+        if (!cleanOrigin || allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes('*')) {
             callback(null, true);
         } else {
+            console.error(`CORS BLOCKED: Origin ${origin} not in allowed list: ${allowedOrigins}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
