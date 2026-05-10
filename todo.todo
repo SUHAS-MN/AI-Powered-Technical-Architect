@@ -1,0 +1,81 @@
+/api/auth/signup
+/api/generate/master
+/api/projects
+/api/projects/:id
+/api/export/zip/:id
+
+
+
+Table users {
+  id integer [primary key]
+  username varchar
+  mail varchar
+  password varchar
+  refresh_token varchar
+  projects varchar
+  created_at timestamp
+}
+
+Table Project {
+  userId integer [primary key]
+  project_name varchar
+  rawInputs text [note: 'Content of the post']
+  schemaDesign integer [note: 'Objects defining collections, fields, and types.']
+  apiRoutes integer [note: 'Objects with method, path, and description.']
+  flowchart integer [note: 'Stores nodes and edges for React Flow.']
+  budget integer [note: 'Breakdown of estimated monthly costs.']
+  status integer [note: '"Draft", "Generating", or "Completed".']
+  updatedAt varchar [note: 'Tracks the latest revision.']
+  created_at timestamp
+}
+
+Ref: users.id < Project.userId
+
+
+
+
+
+
+Method,Endpoint,Description,Request Body
+POST, /api/auth/signup, Creates a user account., "{ email, password }"
+POST, /api/generate/master, The Core: Triggers Gemini to build the full JSON blueprint., "{ name,  goal,  techStack }"
+GET, /api/projects, Retrieves all saved project blueprints for the user., None (JWT required)
+GET, /api/export/zip/:id, Generates and downloads the boilerplate folder., None
+PATCH, /api/projects/:id,Updates a specific section of the blueprint., "{ section: ""schema"",  data: {...} }"
+
+
+-----------------------------------------------------------------------------------------
+
+Prompt 1: The Foundation (PRD & Features)
+Send this first to establish what the app actually does.
+
+System Instruction:
+Act as a Senior Product Manager. Your goal is to convert a vague project idea into a professional PRD. You must return ONLY a JSON object.
+
+User Prompt:
+Generate a PRD for a project named "[Project Name]" with the goal: "[User Goal]".
+Return a JSON object with these keys:
+
+summary: A 3-sentence high-level overview.
+
+target_audience: A string describing the primary users.
+
+features: An array of objects, each with title, description, and priority (P0, P1, or P2).
+
+user_stories: An array of 3-5 standard user stories.
+
+Prompt 2: The Architecture (Schema & API)
+Send this after you have the PRD. Pass the PRD data back into this prompt so the AI stays consistent.
+
+System Instruction:
+Act as a Lead Software Architect. Based on the provided PRD, design the technical backend. You must return ONLY a JSON object.
+
+User Prompt:
+Using this PRD: [Insert JSON from Prompt 1], generate the technical architecture.
+Return a JSON object with these keys:
+
+mongodb_schema: An array of collections. Each collection should have collection_name and fields (an array of objects with name, type, and is_required).
+
+api_endpoints: An array of objects with method (GET, POST, etc.), path, purpose, and required_body_fields (if applicable).
+
+logic_flow: An object containing nodes and edges compatible with the React Flow library to visualize the user's primary journey.

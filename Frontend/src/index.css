@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    --background: 240 10% 2%;
+    --foreground: 0 0% 100%;
+    --primary: 180 100% 50%; /* Electric Cyan */
+    --accent: 270 100% 60%;  /* Deep Violet */
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+  }
+
+  body {
+    @apply bg-[#050505] text-white selection:bg-cyan-500/30;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+  }
+
+  .bento-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .bento-card:hover {
+    @apply -translate-y-2 border-cyan-500/40;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 255, 0.1);
+  }
+
+  .btn-cyber {
+    @apply relative px-8 py-4 rounded-full font-black uppercase tracking-[0.2em] text-xs transition-all duration-500 overflow-hidden;
+    background: linear-gradient(90deg, #00f2ff, #7000ff);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-cyber:hover {
+    @apply scale-105;
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.5), 0 0 20px rgba(112, 0, 255, 0.3);
+  }
+
+  .btn-cyber::before {
+    content: '';
+    @apply absolute inset-0 bg-white/20 translate-y-full transition-transform duration-500;
+  }
+
+  .btn-cyber:hover::before {
+    @apply translate-y-0;
+  }
+
+  .gradient-heading {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-400 to-white;
+    background-size: 200% auto;
+    animation: gradient-flow 6s linear infinite;
+  }
+
+  @keyframes gradient-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .cyber-input {
+    @apply w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none transition-all duration-300 focus:border-cyan-500/50 focus:bg-white/10;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-black;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-cyan-500/50 transition-colors;
+}
